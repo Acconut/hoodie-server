@@ -1,0 +1,40 @@
+# http://www.appveyor.com/docs/appveyor-yml
+
+# Fix line endings in Windows. (runs before repo cloning)
+init:
+  - git config --global core.autocrlf input
+
+# Test against these versions of Node.js.
+environment:
+  matrix:
+    - nodejs_version: "0.10"
+    - nodejs_version: "0.11"
+
+# Allow failing jobs for bleeding-edge Node.js versions.
+matrix:
+  allow_failures:
+    - nodejs_version: "0.11"
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node 0.STABLE.latest
+  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
+  # Install couchdb
+  - ps: (New-Object Net.WebClient).DownloadFile('http://mirror.derwebwolf.net/apache/couchdb/binary/win/1.5.1/setup-couchdb-1.5.1_R16B02.exe', 'C:\\setup_couchdb.exe')
+  - C:\setup_couchdb.exe /VERYSILENT
+  # Typical npm stuff.
+  - npm install
+  - npm install -g grunt-cli
+
+# Post-install test scripts.
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  - cmd: npm test
+
+# Don't actually build.
+build: off
+
+# Set build version format here instead of in the admin panel.
+version: "{build}"
