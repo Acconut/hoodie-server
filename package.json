@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "hoodie": "^0.8.2",
-    "multicouch": "0.8.1",
+    "multicouch": "^0.8.1",
     "hoodie-pocket": "0.0.13",
     "hoodie-plugins-manager": "0.2.5",
     "local-tld-lib": "1.0.2",
